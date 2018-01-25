@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/_10sdp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_enter_data"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textStyle="bold"
+                android:layout_marginTop="@dimen/_10sdp"/>
+
+            <RadioGroup
+                android:id="@+id/rdg_new_existing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView"
+                android:orientation="horizontal"
+                android:padding="@dimen/_5sdp"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/_10sdp">
+
+                <RadioButton
+                    android:id="@+id/radio_new_client"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_new_client"
+                    android:checked="true"
+                    android:layout_marginRight="@dimen/_5sdp"/>
+
+                <RadioButton
+                    android:id="@+id/radio_existing_client"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:text="@string/lbl_existing_client" />
+
+            </RadioGroup>
+
+            <LinearLayout
+                android:id="@+id/layout_client_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/_10sdp">
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_client_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_5sdp">
+
+                <EditText
+                    android:id="@+id/edt_client_name"
+                    style="@style/Form.Label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:layout_marginRight="@dimen/_5sdp"
+                    android:hint="@string/lbl_client_name"
+                    android:inputType="text|textNoSuggestions"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                    android:textColorHint="@color/grey_800" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_spinner_client_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="@string/lbl_client_name" />
+
+                <Spinner
+                    android:id="@+id/spin_client_name"
+                    style="@style/Form.Label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:layout_marginBottom="@dimen/_5sdp"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:layout_marginRight="@dimen/_5sdp" />
+            </LinearLayout>
+
+            <RadioGroup
+                android:id="@+id/rdg_script_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView"
+                android:orientation="horizontal"
+                android:padding="@dimen/_5sdp"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:visibility="gone">
+
+                <RadioButton
+                    android:id="@+id/radio_update_script"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_update_script"
+                    android:checked="true"
+                    android:layout_marginRight="@dimen/_5sdp"/>
+
+                <RadioButton
+                    android:id="@+id/radio_new_script"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:text="@string/lbl_new_script" />
+
+            </RadioGroup>
+
+            <LinearLayout
+                android:id="@+id/layout_script_existing"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:text="@string/lbl_script_name" />
+
+                <Spinner
+                    android:id="@+id/spin_script_name"
+                    style="@style/Form.Label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:layout_marginBottom="@dimen/_5sdp"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:layout_marginRight="@dimen/_5sdp" />
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:id="@+id/layout_edittext_script_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_script_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_8sdp">
+
+                <EditText
+                    android:id="@+id/edt_script_name"
+                    style="@style/Form.Label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:layout_marginRight="@dimen/_5sdp"
+                    android:hint="@string/lbl_script_name"
+                    android:inputType="text|textNoSuggestions"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                    android:textColorHint="@color/grey_800" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            </LinearLayout>
+
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_quantity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_8sdp">
+
+                <EditText
+                    android:id="@+id/edt_quantity"
+                    style="@style/Form.Label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:layout_marginRight="@dimen/_5sdp"
+                    android:hint="@string/lbl_quantity"
+                    android:inputType="numberDecimal"
+                    android:digits="1234567890."
+                    android:textColorHint="@color/grey_800" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_buy_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_8sdp">
+
+                <EditText
+                    android:id="@+id/edt_buy_price"
+                    style="@style/Form.Label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:layout_marginRight="@dimen/_5sdp"
+                    android:hint="@string/lbl_buy_price"
+                    android:inputType="numberDecimal"
+                    android:textColorHint="@color/grey_800" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_ltp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_8sdp">
+
+                <EditText
+                    android:id="@+id/edt_ltp"
+                    style="@style/Form.Label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:layout_marginRight="@dimen/_5sdp"
+                    android:hint="@string/lbl_ltp"
+                    android:inputType="numberDecimal"
+                    android:textColorHint="@color/grey_800" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_profit_loss"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_8sdp">
+
+                <EditText
+                    android:id="@+id/edt_profit_loss"
+                    style="@style/Form.Label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:layout_marginRight="@dimen/_5sdp"
+                    android:hint="@string/lbl_profit_loss"
+                    android:inputType="numberDecimal"
+                    android:textColorHint="@color/grey_800" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:text="@string/lbl_segments" />
+
+            <Spinner
+                android:id="@+id/spin_segments"
+                style="@style/Form.Label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:layout_marginLeft="@dimen/_5sdp"
+                android:layout_marginRight="@dimen/_5sdp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginRight="@dimen/_10sdp">
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/input_buy_date"
+                    android:layout_width="0dp"
+                    android:layout_weight="5"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/edt_buy_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/Form.Label"
+                        android:enabled="true"
+                        android:inputType="date"
+                        android:textColorHint="@color/grey_800"
+                        android:hint="@string/lbl_buy_date" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <ImageView
+                    android:id="@+id/img_calendar"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="@dimen/_25sdp"
+                    android:padding="@dimen/_5sdp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/calendar"/>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_radio_sold_holding_share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center">
+
+            <RadioGroup
+                android:id="@+id/rdg_sold_holding"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView"
+                android:orientation="horizontal"
+                android:padding="@dimen/_5sdp"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/_10sdp">
+
+                <RadioButton
+                    android:id="@+id/radio_sold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_sold"
+                    android:layout_marginRight="@dimen/_5sdp"/>
+
+                <RadioButton
+                    android:id="@+id/radio_holding"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:text="@string/lbl_existing" />
+            </RadioGroup>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_sold_selected"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:layout_marginRight="@dimen/_10sdp">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/input_sold_date"
+                        android:layout_width="0dp"
+                        android:layout_weight="5"
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:id="@+id/edt_sold_date"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            style="@style/Form.Label"
+                            android:enabled="true"
+                            android:inputType="date"
+                            android:textColorHint="@color/grey_800"
+                            android:hint="@string/lbl_sold_date" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <ImageView
+                        android:id="@+id/img_calendar_sold"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="@dimen/_25sdp"
+                        android:padding="@dimen/_5sdp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/calendar"/>
+
+
+                </LinearLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/input_sold_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:layout_marginTop="@dimen/_8sdp">
+
+                    <EditText
+                        android:id="@+id/edt_sold_price"
+                        style="@style/Form.Label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_marginRight="@dimen/_5sdp"
+                        android:hint="@string/lbl_sold_price"
+                        android:inputType="numberDecimal"
+                        android:digits="1234567890."
+                        android:textColorHint="@color/grey_800" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/input_sold_quantity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:layout_marginTop="@dimen/_8sdp">
+
+                    <EditText
+                        android:id="@+id/edt_sold_quantity"
+                        style="@style/Form.Label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_marginRight="@dimen/_5sdp"
+                        android:hint="@string/lbl_sold_quantity"
+                        android:inputType="numberDecimal"
+                        android:digits="1234567890."
+                        android:textColorHint="@color/grey_800" />
+
+                </android.support.design.widget.TextInputLayout>
+
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/btn_submit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:background="@drawable/custom_button"
+                android:textColor="@color/white"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:text="@string/lbl_submit"
+                android:layout_marginBottom="@dimen/_20sdp"/>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+</LinearLayout>
