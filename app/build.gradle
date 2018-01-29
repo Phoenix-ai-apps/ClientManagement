@@ -6,8 +6,8 @@ android {
         applicationId "demo.app.com.app2"
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -19,7 +19,7 @@ android {
             storePassword 'android'
         }
         release {
-            keyAlias KEYSTORE_ALIAS
+            keyAlias 'clientmanagement'
             keyPassword KEY_PASSWORD
             storeFile file('../keystoreRelease/clientmanagement.jks')
             storePassword KEYSTORE_PASSWORD
@@ -27,12 +27,23 @@ android {
     }
 
     buildTypes {
-        release {
-            debuggable false
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
+        debug {
+            debuggable      true
+            minifyEnabled   false
+            shrinkResources false
+            zipAlignEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+
+        release {
+            debuggable      false
+            minifyEnabled   true
+            shrinkResources true
+            zipAlignEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 

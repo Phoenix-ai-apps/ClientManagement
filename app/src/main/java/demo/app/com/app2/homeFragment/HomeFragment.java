@@ -54,6 +54,7 @@ public class HomeFragment extends BaseFragment<HomeFragmentPresenter> implements
     private AlarmReceiver alarmReceiver;
 
     @BindView(R.id.layout_no_data)        LinearLayout         layoutNoData;
+    @BindView(R.id.layout_home)           LinearLayout         layoutHome;
     @BindView(R.id.txt_make_entry)        TextView             txtMakeEntry;
     @BindView(R.id.rec_all_items)         RecyclerView         recAllItems;
     private LinearLayoutManager           mLinearLayoutManager;
@@ -71,6 +72,7 @@ public class HomeFragment extends BaseFragment<HomeFragmentPresenter> implements
     private int deletedIndex;
 
 
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -78,6 +80,12 @@ public class HomeFragment extends BaseFragment<HomeFragmentPresenter> implements
 
 
     }
+
+    @Override
+    protected int getLayout() {
+        return R.layout.fragment_home;
+    }
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -96,8 +104,6 @@ public class HomeFragment extends BaseFragment<HomeFragmentPresenter> implements
     }
 
     private void initResources() {
-
-
 
         mainActivity = new MainActivity();
 
@@ -204,11 +210,6 @@ public class HomeFragment extends BaseFragment<HomeFragmentPresenter> implements
     @Override
     protected HomeFragmentPresenter getPresenter() {
         return new HomeFragmentPresenter(this);
-    }
-
-    @Override
-    protected int getLayout() {
-        return R.layout.fragment_home;
     }
 
     public void navigateToDetails(){

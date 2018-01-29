@@ -192,6 +192,26 @@ public class ClientInfoDataSource implements HelperInterface {
     }
 
 
+    public ArrayList<ClientInfo> getAllClientInfoByScriptName(String scriptName) {
+
+        ArrayList<ClientInfo> ClientInfoList = new ArrayList<ClientInfo>();
+        Cursor cursor = database.query(TABLE_CLIENT_INFO, allColumns, CLIENT_SCRIPT_NAME + " LIKE ?" ,
+                new String[]{scriptName}, null, null, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            ClientInfo clientInfo = cursorToClient(cursor);
+            ClientInfoList.add(clientInfo);
+            cursor.moveToNext();
+        }
+        Log.i(TAG, "total Client info found : " + cursor.getCount() + " Client info list size : " + ClientInfoList.size());
+        cursor.close();
+
+        return ClientInfoList;
+    }
+
+
+
     public int deleteClientInfo(ClientInfo clientInfo) {
         String appNo = String.valueOf(clientInfo.getClientId());
         System.out.println("Client info deleted with no: " + appNo);

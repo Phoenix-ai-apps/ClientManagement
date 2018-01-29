@@ -1,19 +1,18 @@
 package demo.app.com.app2.detailsFragment;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.StrictMode;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -49,7 +48,6 @@ import demo.app.com.app2.helper.ApplicationHelper;
 import demo.app.com.app2.homeFragment.HomeFragment;
 import demo.app.com.app2.models.ClientInfo;
 import demo.app.com.app2.models.SpinInfo;
-import demo.app.com.app2.ui.ApplicationFonts;
 import demo.app.com.app2.utils.ApplicationUtils;
 
 public class DetailFragment extends BaseFragment<DetailFragmentPresenter> implements DetailFragmentContract.View,View.OnClickListener,RadioGroup.OnCheckedChangeListener,AdapterView.OnItemSelectedListener,TextWatcher{
@@ -110,6 +108,8 @@ public class DetailFragment extends BaseFragment<DetailFragmentPresenter> implem
     @BindView(R.id.img_calendar_sold)          ImageView imgCalendarSold;
 
     @BindView(R.id.btn_submit)                 Button btnSubmit;
+
+    private ProgressDialog                     progressDialog;
 
     //@formatter:on
 
@@ -865,6 +865,19 @@ public class DetailFragment extends BaseFragment<DetailFragmentPresenter> implem
             clientInfo.setClientInfoStaus(CLIENT_INFO_L);
         }
 
+        List<ClientInfo> infoList = clientInfoDataSource.getAllClientInfoByScriptName(clientInfo.getScriptName());
+
+        if (infoList != null && infoList.size() > 0) {
+            showProgressDialog();
+            for (ClientInfo info : infoList) {
+                info.setLtp(clientInfo.getLtp());
+                info.setProfitLoss(getProfitLoss(info.getQuantity(), info.getBuyPrice(), clientInfo.getLtp()));
+
+                long update = clientInfoDataSource.updateClientInfo(info);
+            }
+            hideProgressDialog();
+        }
+
         clientInfoDataSource.updateClientInfo(clientInfo);
 
         clientInfoDataSource.close();
@@ -873,7 +886,6 @@ public class DetailFragment extends BaseFragment<DetailFragmentPresenter> implem
 
         if(ApplicationUtils.isConnected(AppContext.getInstance())){
            // sendMail("TIP UPDATED");
-
             new SendMailClass("TIP UPDATED").execute();
 
         }
@@ -888,27 +900,39 @@ public class DetailFragment extends BaseFragment<DetailFragmentPresenter> implem
         clientInfo.setClientInfoStaus(CLIENT_INFO_L);
         clientInfoDataSource.createClientInfo(clientInfo);
 
+        List<ClientInfo> infoList = clientInfoDataSource.getAllClientInfoByScriptName(clientInfo.getScriptName());
+
+        if (infoList != null && infoList.size() > 0) {
+            showProgressDialog();
+            for (ClientInfo info : infoList) {
+                info.setLtp(clientInfo.getLtp());
+                info.setProfitLoss(getProfitLoss(info.getQuantity(), info.getBuyPrice(), clientInfo.getLtp()));
+
+                long update = clientInfoDataSource.updateClientInfo(info);
+            }
+            hideProgressDialog();
+        }
+
         clientInfoDataSource.close();
 
         navigateToHome();
 
-        if(ApplicationUtils.isConnected(AppContext.getInstance())){
-           //  sendMail("NEW TIP");
+        if(ApplicationUtils.isConnected(AppContext.getInstance())) {
+            //  sendMail("NEW TIP");
 
-            new SendMailClass("NEW TIP").execute();
+            if (ApplicationUtils.isConnected(AppContext.getInstance())) {
+                // sendMail("TIP UPDATED");
+
+                new SendMailClass("NEW TIP").execute();
+
+            }
 
         }
-
-
     }
 
-    private String getProfitLoss(){
+    private String getProfitLoss(String quantity, String buyprice, String ltp){
 
         String totalCost = "";
-
-        String quantity  = edtQuantity.getText().toString();
-        String buyprice  = edtBuyPrice.getText().toString();
-        String ltp       = edtLtp.getText().toString();
 
         long quantityInt  = 0;
         long buypriceInt  = 0;
@@ -1029,7 +1053,7 @@ public class DetailFragment extends BaseFragment<DetailFragmentPresenter> implem
 
             if (quaqntInt > 0 && buyInt > 0 && ltpInt > 0) {
 
-                String amt = getProfitLoss();
+                String amt = getProfitLoss(quant, buy, ltp);
 
                 edtProfitLoss.setEnabled(false);
                 edtProfitLoss.setText(amt);
@@ -1390,31 +1414,14 @@ public class DetailFragment extends BaseFragment<DetailFragmentPresenter> implem
     }
 
 
-    private void restoreDataFromHomeFragment(ClientInfo globalClientInfoDatabase){
+    private void restoreDataFromHomeFragment(ClientInfo cliientInfo){
 
-        if(globalClientInfoDatabase != null) {
+        if(cliientInfo != null) {
 
             rdgScriptStatus.setVisibility(View.GONE);
             rdgNewExisting.setVisibility(View.GONE);
 
-           /* rdgNewExisting.setEnabled(false);
-            radioExistingClient.setEnabled(false);
-            radioNewClient.setEnabled(false);
-            radioUpdateScript.setEnabled(false);
-            radioNewScript.setEnabled(false);*/
-            if (globalClientInfoDatabase.getClientStatus() != null && globalClientInfoDatabase.getClientStatus().trim().length() > 0) {
-
-          /*  if(clientInfo1.getClientStatus().equalsIgnoreCase(NEW_CLIENT)){
-
-                radioExistingClient.setChecked(false);
-                radioNewClient.setChecked(true);
-                rdgScriptStatus.setVisibility(View.GONE);
-                layoutSpinnerName.setVisibility(View.GONE);
-                layoutClientName.setVisibility(View.VISIBLE);
-
-            }else */
-
-               // if (globalClientInfoDatabase.getClientStatus().equalsIgnoreCase(NEW_CLIENT)) {
+            if (cliientInfo.getClientStatus() != null && cliientInfo.getClientStatus().trim().length() > 0) {
 
                     radioExistingClient.setChecked(true);
                     radioNewClient.setChecked(false);
@@ -1422,129 +1429,71 @@ public class DetailFragment extends BaseFragment<DetailFragmentPresenter> implem
                     layoutSpinnerName.setVisibility(View.GONE);
                     layoutClientName.setVisibility(View.VISIBLE);
 
-                    //}
-               // }
-
             }
 
-            if (globalClientInfoDatabase.getClientName() != null && globalClientInfoDatabase.getClientName().trim().length() > 0) {
-
-           /* if(clientInfo1.getClientStatus().equalsIgnoreCase(NEW_CLIENT)){
-
-                layoutSpinnerName.setVisibility(View.GONE);
-                edtClientName.setText(clientInfo1.getClientName());
-
-            }else if(clientInfo1.getClientStatus().equalsIgnoreCase(EXISTING_CLIENT)){*/
+            if (cliientInfo.getClientName() != null && cliientInfo.getClientName().trim().length() > 0) {
 
                 layoutSpinnerName.setVisibility(View.GONE);
                 layoutClientName.setVisibility(View.VISIBLE);
-                edtClientName.setText(globalClientInfoDatabase.getClientName().trim());
+                edtClientName.setText(cliientInfo.getClientName().trim());
                 //spinClientName.setSelection(getIndex(spinClientName, globalClientInfoDatabase.getClientName().trim()));
 
-                Log.e(TAG, "restoreDataFromHomeFragment: " + globalClientInfoDatabase.getClientName().trim());
-
-                // }
-
+                Log.e(TAG, "restoreDataFromHomeFragment: " + cliientInfo.getClientName().trim());
 
             }
 
-            if (globalClientInfoDatabase.getScriptStatus() != null && globalClientInfoDatabase.getScriptStatus().trim().length() > 0) {
+            if (cliientInfo.getScriptStatus() != null && cliientInfo.getScriptStatus().trim().length() > 0) {
 
-           /* if(clientInfo1.getScriptStatus().equalsIgnoreCase(NEW_SCRIPT)){
-
-                layoutScriptExisting.setVisibility(View.GONE);
-                layoutEdtScriptName.setVisibility(View.VISIBLE);
-                radioUpdateScript.setChecked(false);
-                radioNewScript.setChecked(true);
-
-            }else if(clientInfo1.getScriptStatus().equalsIgnoreCase(UPDATE_SCRIPT)){
-*/
                 layoutScriptExisting.setVisibility(View.GONE);
                 layoutEdtScriptName.setVisibility(View.VISIBLE);
                 rdgScriptStatus.setVisibility(View.GONE);
                 radioUpdateScript.setChecked(true);
                 radioNewScript.setChecked(false);
-            /*}else {
-
-                rdgScriptStatus.setVisibility(View.GONE);
 
             }
-*/
 
-            }/*else {
-
-            rdgScriptStatus.setVisibility(View.GONE);
-
-
-        }
-*/
-            if (globalClientInfoDatabase.getScriptName() != null && globalClientInfoDatabase.getScriptName().trim().length() > 0) {
-
-
-              /*  if(clientInfo1.getScriptStatus() != null && clientInfo1.getScriptStatus().trim().length() > 0) {
-
-                    if (clientInfo1.getScriptStatus().equalsIgnoreCase(NEW_SCRIPT)) {
-
-                        layoutScriptExisting.setVisibility(View.GONE);
-                        layoutEdtScriptName.setVisibility(View.VISIBLE);
-                        edtScriptName.setText(clientInfo1.getScriptName());
-
-                    } else if (clientInfo1.getScriptStatus().equalsIgnoreCase(UPDATE_SCRIPT)) {
-*/
+            if (cliientInfo.getScriptName() != null && cliientInfo.getScriptName().trim().length() > 0) {
                 layoutScriptExisting.setVisibility(View.GONE);
                 layoutEdtScriptName.setVisibility(View.VISIBLE);
-                edtScriptName.setText(globalClientInfoDatabase.getScriptName().trim());
-                //spinScriptName.setSelection(getIndex(spinScriptName, globalClientInfoDatabase.getScriptName().trim()));
-
-                  /*  }
-
-                }else {
-
-                    rdgScriptStatus.setVisibility(View.GONE);
-                    layoutScriptExisting.setVisibility(View.GONE);
-                    layoutEdtScriptName.setVisibility(View.VISIBLE);
-                    edtScriptName.setText(clientInfo1.getScriptName());
-
-                }
-*/
+                edtScriptName.setText(cliientInfo.getScriptName().trim());
             }
 
-            if (globalClientInfoDatabase.getQuantity() != null && globalClientInfoDatabase.getQuantity().trim().length() > 0) {
+            if (cliientInfo.getQuantity() != null && cliientInfo.getQuantity().trim().length() > 0) {
 
-                edtQuantity.setText(globalClientInfoDatabase.getQuantity().trim());
+                edtQuantity.setText(cliientInfo.getQuantity().trim());
 
-                Log.e(TAG, "restoreDataFromHomeFragment: "+ globalClientInfoDatabase.getQuantity().trim());
+                Log.e(TAG, "restoreDataFromHomeFragment: "+ cliientInfo.getQuantity().trim());
 
             }
 
-            if (globalClientInfoDatabase.getSegments() != null && globalClientInfoDatabase.getSegments().trim().length() > 0) {
+            if (cliientInfo.getSegments() != null && cliientInfo.getSegments().trim().length() > 0) {
 
-                Log.e(TAG, "restoreDataFromHomeFragment: " + globalClientInfoDatabase.getSegments());
+                Log.e(TAG, "restoreDataFromHomeFragment: " + cliientInfo.getSegments());
 
-                spinSegments.setSelection(getSpinnerId(globalClientInfoDatabase.getSegments().trim()));
+                spinSegments.setSelection(getSpinnerId(cliientInfo.getSegments().trim()));
 
             }
 
-            if (globalClientInfoDatabase.getBuyPrice() != null && globalClientInfoDatabase.getBuyPrice().trim().length() > 0) {
+            if (cliientInfo.getBuyPrice() != null && cliientInfo.getBuyPrice().trim().length() > 0) {
 
-                edtBuyPrice.setText(globalClientInfoDatabase.getBuyPrice().trim());
+                edtBuyPrice.setText(cliientInfo.getBuyPrice().trim());
             }
 
-            if (globalClientInfoDatabase.getBuyDate() != null && globalClientInfoDatabase.getBuyDate().trim().length() > 0) {
+            if (cliientInfo.getBuyDate() != null && cliientInfo.getBuyDate().trim().length() > 0) {
 
-                edtBuyDate.setText(globalClientInfoDatabase.getBuyDate().trim());
+                edtBuyDate.setText(cliientInfo.getBuyDate().trim());
             }
 
-            if (globalClientInfoDatabase.getShareStatus() != null && globalClientInfoDatabase.getShareStatus().trim().length() > 0) {
+            if (cliientInfo.getShareStatus() != null && cliientInfo.getShareStatus().trim().length() > 0) {
 
-                if (globalClientInfoDatabase.getShareStatus().equalsIgnoreCase(SOLD) ||
-                        globalClientInfoDatabase.getShareStatus().equalsIgnoreCase(PARTIAL_SOLD) ) {
+                if (cliientInfo.getShareStatus().equalsIgnoreCase(SOLD) ||
+                        cliientInfo.getShareStatus().equalsIgnoreCase(PARTIAL_SOLD) ) {
 
                     radioSold.setChecked(true);
                     radioHolding.setChecked(false);
                     shareStatus = SOLD;
 
-                } else if (globalClientInfoDatabase.getShareStatus().equalsIgnoreCase(CURRENTLY_HOLDING)) {
+                } else if (cliientInfo.getShareStatus().equalsIgnoreCase(CURRENTLY_HOLDING)) {
 
                     radioHolding.setChecked(true);
                     radioSold.setChecked(false);
@@ -1558,34 +1507,34 @@ public class DetailFragment extends BaseFragment<DetailFragmentPresenter> implem
             }
 
 
-            if (globalClientInfoDatabase.getSoldDate() != null && globalClientInfoDatabase.getSoldDate().trim().length() > 0) {
+            if (cliientInfo.getSoldDate() != null && cliientInfo.getSoldDate().trim().length() > 0) {
 
                 layoutSoldSelected.setVisibility(View.VISIBLE);
-                edtSoldDate.setText(globalClientInfoDatabase.getSoldDate().trim());
+                edtSoldDate.setText(cliientInfo.getSoldDate().trim());
             }
 
-            if (globalClientInfoDatabase.getSoldPrice() != null && globalClientInfoDatabase.getSoldPrice().trim().length() > 0) {
+            if (cliientInfo.getSoldPrice() != null && cliientInfo.getSoldPrice().trim().length() > 0) {
 
                 layoutSoldSelected.setVisibility(View.VISIBLE);
-                edtSoldPrice.setText(globalClientInfoDatabase.getSoldPrice().trim());
+                edtSoldPrice.setText(cliientInfo.getSoldPrice().trim());
             }
 
-            if(globalClientInfoDatabase.getLtp() != null && globalClientInfoDatabase.getLtp().trim().length() > 0){
+            if(cliientInfo.getLtp() != null && cliientInfo.getLtp().trim().length() > 0){
 
-                edtLtp.setText(globalClientInfoDatabase.getLtp().trim());
-
-            }
-
-            if(globalClientInfoDatabase.getProfitLoss() != null && globalClientInfoDatabase.getProfitLoss().trim().length() > 0){
-
-                edtProfitLoss.setText(globalClientInfoDatabase.getProfitLoss().trim());
+                edtLtp.setText(cliientInfo.getLtp().trim());
 
             }
 
-            if(globalClientInfoDatabase.getSoldQuantity() != null && globalClientInfoDatabase.getSoldQuantity().trim().length() > 0){
+            if(cliientInfo.getProfitLoss() != null && cliientInfo.getProfitLoss().trim().length() > 0){
+
+                edtProfitLoss.setText(cliientInfo.getProfitLoss().trim());
+
+            }
+
+            if(cliientInfo.getSoldQuantity() != null && cliientInfo.getSoldQuantity().trim().length() > 0){
 
                 layoutSoldSelected.setVisibility(View.VISIBLE);
-                edtSoldQuantity.setText(globalClientInfoDatabase.getSoldQuantity().trim());
+                edtSoldQuantity.setText(cliientInfo.getSoldQuantity().trim());
 
             }
 
@@ -1744,8 +1693,6 @@ public class DetailFragment extends BaseFragment<DetailFragmentPresenter> implem
 
     }
 
-
-
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
@@ -1758,4 +1705,17 @@ public class DetailFragment extends BaseFragment<DetailFragmentPresenter> implem
     public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
+
+    private void showProgressDialog() {
+       progressDialog = ProgressDialog.show(mActivity, "", "Please wait...");
+
+    }
+
+    private void hideProgressDialog() {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        } else
+            return;
+    }
+
 }
