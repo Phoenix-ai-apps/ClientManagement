@@ -40,6 +40,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import demo.app.com.app2.AppContext;
 import demo.app.com.app2.BaseFragment;
+import demo.app.com.app2.BuildConfig;
 import demo.app.com.app2.R;
 import demo.app.com.app2.database.dataSource.ClientInfoDataSource;
 import demo.app.com.app2.di.DependencyInjector;
@@ -711,7 +712,9 @@ public class DetailFragment extends BaseFragment<DetailFragmentPresenter> implem
                 clientInfo.setSoldQuantity("");
                 String dateTime = ApplicationUtils.getDateTime();
                 Log.e(TAG, "validateShareStatus: "+dateTime );
+
                 clientInfo.setCreatedDateTime(dateTime);
+
                 updateDataToDB(clientInfo);
                 ApplicationUtils.showToast(mActivity,"Form filled successfully");
                 //navigateToHome();
@@ -809,28 +812,34 @@ public class DetailFragment extends BaseFragment<DetailFragmentPresenter> implem
 
                 if(soldQuant != null && soldQuant.trim().length() > 0){
 
-                    newQuant = String.valueOf(quantityInt - soldQuantInt);
+                    if(soldQuantInt <= quantityInt ){
+                        newQuant = String.valueOf(quantityInt - soldQuantInt);
+                        edtQuantity.setText(String.valueOf(quantityInt - soldQuantInt));
+                        newCountInt = quantityInt - soldQuantInt;
+                        buyAmtInt = (newCountInt * buypriceInt);
+                        currentAmtInt = (ltpInt * newCountInt);
+                        totalCost   = String.valueOf(currentAmtInt - buyAmtInt);
 
-                    edtQuantity.setText(String.valueOf(quantityInt - soldQuantInt));
+                        if(soldQuantInt == quantityInt){
+                            shareStatus = SOLD;
+                        }else {
+                            shareStatus = PARTIAL_SOLD;
+                        }
 
-                    newCountInt = quantityInt - soldQuantInt;
+                        clientInfo.setProfitLoss(totalCost);
+                        clientInfo.setQuantity(newQuant);
+                        clientInfo.setShareStatus(shareStatus);
 
-                    buyAmtInt = (newCountInt * buypriceInt);
+                        updateDataToDB(clientInfo);
+                        //navigateToHome();
+                        ApplicationUtils.showToast(mActivity,"Form updated successfully");
 
-                    currentAmtInt = (ltpInt * newCountInt);
 
-                    totalCost   = String.valueOf(currentAmtInt - buyAmtInt);
+                    }else {
+                        ApplicationUtils.showToastSmall(mActivity,"Sold Quantity must be less than or Equal to Current quantity");
+                    }
 
                 }
-
-                clientInfo.setProfitLoss(totalCost);
-                clientInfo.setQuantity(newQuant);
-                shareStatus = PARTIAL_SOLD;
-                clientInfo.setShareStatus(shareStatus);
-
-                updateDataToDB(clientInfo);
-                //navigateToHome();
-                ApplicationUtils.showToast(mActivity,"Form updated successfully");
 
 
             }else {
@@ -886,7 +895,10 @@ public class DetailFragment extends BaseFragment<DetailFragmentPresenter> implem
 
         if(ApplicationUtils.isConnected(AppContext.getInstance())){
            // sendMail("TIP UPDATED");
-            new SendMailClass("TIP UPDATED").execute();
+
+            if(!BuildConfig.DEBUG){
+                new SendMailClass("TIP UPDATED").execute();
+            }
 
         }
 
@@ -923,7 +935,9 @@ public class DetailFragment extends BaseFragment<DetailFragmentPresenter> implem
             if (ApplicationUtils.isConnected(AppContext.getInstance())) {
                 // sendMail("TIP UPDATED");
 
-                new SendMailClass("NEW TIP").execute();
+                if(!BuildConfig.DEBUG){
+                    new SendMailClass("NEW TIP").execute();
+                }
 
             }
 
@@ -1060,18 +1074,12 @@ public class DetailFragment extends BaseFragment<DetailFragmentPresenter> implem
 
             } else {
                 if (quaqntInt == 0) {
-                    ApplicationUtils.showToast(mActivity,"Please enter Length greater than 0");
-
                     edtProfitLoss.setText("0");
 
                 } else if (buyInt == 0) {
-                    ApplicationUtils.showToast(mActivity,"Please enter Breadth greater than 0");
-
                     edtProfitLoss.setText("0");
 
                 } else if (ltpInt == 0) {
-                    ApplicationUtils.showToast(mActivity,"Please enter quantity greater than 0");
-
                     edtProfitLoss.setText("0");
                 }
             }

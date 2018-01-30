@@ -9,7 +9,7 @@ public interface AppConstants {
     String NEW_CLIENT                   = "NEW CLIENT";
     String EXISTING_CLIENT              = "EXISTING CLIENT";
 
-    String SOLD                         = "SOLD";
+    String SOLD                         = "COMPLETELY SOLD";
     String CURRENTLY_HOLDING            = "CURRENTLY HOLDING";
     String PARTIAL_SOLD                 = "PARTIAL SOLD";
 
