@@ -97,10 +97,6 @@ public class AllItemsAdapter extends RecyclerView.Adapter<AllItemsAdapter.ListIt
         if (clientListFiltered!= null && clientListFiltered.size() > 0
                 && ObjectUtils.indexExists(clientListFiltered, position)) {
 
-            rs = RenderScript.create(AppContext.getInstance());
-
-            mBitmap1 = loadBitmap(holder.imgBus , holder.viewBackground);
-
             mClickedPosition = position;
 
             ClientInfo info = clientListFiltered.get(position);
@@ -423,97 +419,6 @@ public class AllItemsAdapter extends RecyclerView.Adapter<AllItemsAdapter.ListIt
 
         }
     }
-
-
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
-    private Bitmap loadBitmap(View backgroundView, View targetView) {
-        Rect backgroundBounds = new Rect();
-        backgroundView.getHitRect(backgroundBounds);
-        if (!targetView.getLocalVisibleRect(backgroundBounds)) {
-            // NONE of the imageView is within the visible window
-            return null;
-        }
-
-        Bitmap blurredBitmap = captureView(backgroundView);
-        //capture only the area covered by our target view
-        int[] loc = new int[2];
-        int[] bgLoc = new int[2];
-        backgroundView.getLocationInWindow(bgLoc);
-        targetView.getLocationInWindow(loc);
-        int height = targetView.getHeight();
-        int y = loc[1];
-        if (bgLoc[1] >= loc[1]) {
-            //view is going off the screen at the top
-            height -= (bgLoc[1] - loc[1]);
-            if (y < 0)
-                y = 0;
-        }
-        if (y + height > blurredBitmap.getHeight()) {
-            height = blurredBitmap.getHeight() - y;
-            Log.d("TAG", "Height = " + height);
-            if (height <= 0) {
-                //below the screen
-                return null;
-            }
-        }
-        Matrix matrix = new Matrix();
-        //half the size of the cropped bitmap
-        //to increase performance, it will also
-        //increase the blur effect.
-        matrix.setScale(0.5f, 0.5f);
-        Bitmap bitmap = Bitmap.createBitmap(blurredBitmap,
-                (int) targetView.getX(),
-                y,
-                targetView.getMeasuredWidth(),
-                height,
-                matrix,
-                true);
-
-        return bitmap;
-        //If handling rounded corners yourself.
-        //Create rounded corners on the Bitmap
-        //keep in mind that our bitmap is half
-        //the size of the original view, setting
-        //it as the background will stretch it out
-        //so you will need to use a smaller value
-        //for the rounded corners than you would normally
-        //to achieve the correct look.
-        //ImageHelper.roundCorners(
-        //bitmap,
-        //getResources().getDimensionPixelOffset(R.dimen.rounded_corner),
-        //false);
-    }
-
-
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
-    public Bitmap captureView(View view) {
-        if (mBlurredBitmap != null) {
-            return mBlurredBitmap;
-        }
-        //Find the view we are after
-        //Create a Bitmap with the same dimensions
-        mBlurredBitmap = Bitmap.createBitmap(view.getMeasuredWidth(),
-                view.getMeasuredHeight(),
-                Bitmap.Config.ARGB_4444); //reduce quality and remove opacity
-        //Draw the view inside the Bitmap
-        Canvas canvas = new Canvas(mBlurredBitmap);
-        view.draw(canvas);
-
-        //blur it
-        ImageHelper.blurBitmapWithRenderscript(rs, mBlurredBitmap);
-
-        //Make it frosty
-        Paint paint = new Paint();
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        ColorFilter filter = new LightingColorFilter(0xFFFFFFFF, 0x00222222); // lighten
-        //ColorFilter filter = new LightingColorFilter(0xFF7F7F7F, 0x00000000);    // darken
-        paint.setColorFilter(filter);
-        canvas.drawBitmap(mBlurredBitmap, 0, 0, paint);
-
-        return mBlurredBitmap;
-    }
-
-
 
     @Override
     public int getItemCount() {

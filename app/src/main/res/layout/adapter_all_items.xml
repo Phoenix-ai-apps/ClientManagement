@@ -13,8 +13,6 @@
         android:layout_marginRight="@dimen/_5sdp"
         android:layout_marginBottom="@dimen/_5sdp"
         android:layout_marginTop="@dimen/_5sdp"
-        android:background="@android:color/transparent"
-        app:contentScrim="@android:color/transparent"
         android:foreground="?android:attr/selectableItemBackground"
         app:cardCornerRadius="@dimen/_5sdp">
 
@@ -34,7 +32,7 @@
                 android:id="@+id/view_background"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/custom_border">
+                android:background="@color/red_400">
 
                 <ImageView
                     android:id="@+id/delete_icon"
@@ -77,7 +75,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@color/blue_grey_50"
+                android:background="@drawable/card_background_shadow"
                 android:padding="@dimen/_5sdp">
 
                 <LinearLayout
