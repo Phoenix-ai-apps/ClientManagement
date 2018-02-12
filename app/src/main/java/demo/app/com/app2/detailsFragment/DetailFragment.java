@@ -1546,6 +1546,19 @@ public class DetailFragment extends BaseFragment<DetailFragmentPresenter> implem
 
             }
 
+            if(cliientInfo.getShareStatus() == null){
+
+                radioHolding.setChecked(true);
+
+            }else if(cliientInfo.getShareStatus().equalsIgnoreCase(CURRENTLY_HOLDING)){
+
+                radioHolding.setChecked(true);
+
+            }else if(cliientInfo.getShareStatus().equalsIgnoreCase(SOLD)){
+
+                radioSold.setChecked(true);
+            }
+
         }
 
     }
