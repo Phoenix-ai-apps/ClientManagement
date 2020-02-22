@@ -16,9 +16,9 @@ public interface AppConstants {
     String NEW_SCRIPT                   = "NEW SCRIPT";
     String UPDATE_SCRIPT                = "UPDATE SCRIPT";
 
-    String APP_CRASH_RECEIPENTS         = "sendtipsalert@gmail.com";  // can add multiple id following with , i.e. "a@abc.com , b@abc.com"
-    String APP_CRASH_SENDER_EMAIL       = "sendtipsalert@gmail.com";
-    String APP_CRASH_SENDER_PASSWORD    = "sendAlert";
+    String APP_CRASH_RECEIPENTS         = "sendtipsalert@sample.sample";  // can add multiple id following with , i.e. "a@abc.com , b@abc.com"
+    String APP_CRASH_SENDER_EMAIL       = "sendtipsalert@sample.sample";
+    String APP_CRASH_SENDER_PASSWORD    = "sample.sample";
 
     String APP_CRASH_REPORT_SUBJECT     = "All TIPS";
     String APP_CRASH_REPORT_EXTRA_TEXT  = "file Attached";
